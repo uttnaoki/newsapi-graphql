@@ -11,3 +11,11 @@
 ## メモ
 
 - ID は unique な String 型
+
+### prisma コマンド
+
+```
+$ yarn prisma migrate dev "comment"
+$ yarn prisma generate
+$ yarn prisma studio
+```
