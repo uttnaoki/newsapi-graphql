@@ -3,22 +3,32 @@ const fs = require('fs');
 const path = require('path');
 
 const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
 
 const { getUserId } = require('./utils');
 
 // リゾルバ関係のファイル
 const Query = require('./resolvers/Query');
 const Mutation = require('./resolvers/Mutation');
+const Subscription = require('./resolvers/Subscription');
 const Link = require('./resolvers/Link');
 const User = require('./resolvers/User');
+const Vote = require('./resolvers/Vote');
+
+// サブスクリプションの実装
+// Publisher(送信者)/Subscriber(受信者)
+const { PubSub } = require('apollo-server');
+
+const prisma = new PrismaClient();
+const pubsub = new PubSub();
 
 // リゾルバ関数
 const resolvers = {
   Query,
   Mutation,
+  Subscription,
   Link,
   User,
+  Vote,
 };
 
 const server = new ApolloServer({
@@ -28,6 +38,7 @@ const server = new ApolloServer({
     return {
       ...req,
       prisma,
+      pubsub,
       userId: req?.headers.authorization ? getUserId(req) : null,
     };
   },
